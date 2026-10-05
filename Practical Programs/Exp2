@@ -1,0 +1,37 @@
+Experiment 2: Monoalphabetic Substitution Cipher
+
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    char p[100], key[] = "QWERTYUIOPASDFGHJKLZXCVBNM";
+    int i, j;
+
+    printf("Enter plaintext: ");
+    fgets(p, sizeof(p), stdin);
+
+    for (i = 0; p[i] != '\0'; i++) {
+        if (isalpha(p[i]))
+            p[i] = key[toupper(p[i]) - 'A'];
+    }
+
+    printf("Ciphertext: %s", p);
+
+    for (i = 0; p[i] != '\0'; i++) {
+        if (isalpha(p[i])) {
+            for (j = 0; j < 26; j++)
+                if (key[j] == p[i])
+                    p[i] = 'A' + j;
+        }
+    }
+
+    printf("Plaintext: %s", p);
+    return 0;
+}
+
+Sample Input
+Plaintext: HELLO
+
+Sample Output
+Ciphertext: ITSSG
+Plaintext: HELLO
