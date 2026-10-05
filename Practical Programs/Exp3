@@ -1,0 +1,57 @@
+Experiment 3: Playfair Cipher
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char key[] = "MONARCHY", text[100], a[25], used[26] = {0};
+    int i, j, k = 0, r1, r2, c1, c2;
+
+    for (i = 0; key[i]; i++) {
+        char ch = toupper(key[i]);
+        if (ch == 'J') ch = 'I';
+        if (!used[ch-'A']) {
+            a[k++] = ch;
+            used[ch-'A'] = 1;
+        }
+    }
+
+    for (i = 0; i < 26; i++)
+        if (i != ('J'-'A') && !used[i])
+            a[k++] = 'A' + i;
+
+    printf("Enter plaintext: ");
+    scanf("%s", text);
+
+    for (i = 0; text[i]; i++) {
+        text[i] = toupper(text[i]);
+        if (text[i] == 'J') text[i] = 'I';
+    }
+
+    printf("Ciphertext: ");
+
+    for (i = 0; text[i]; i += 2) {
+        char x = text[i], y = text[i+1];
+
+        for (j = 0; j < 25; j++) {
+            if (a[j] == x) r1 = j/5, c1 = j%5;
+            if (a[j] == y) r2 = j/5, c2 = j%5;
+        }
+
+        if (r1 == r2)
+            printf("%c%c", a[r1*5+(c1+1)%5], a[r2*5+(c2+1)%5]);
+        else if (c1 == c2)
+            printf("%c%c", a[((r1+1)%5)*5+c1], a[((r2+1)%5)*5+c2]);
+        else
+            printf("%c%c", a[r1*5+c2], a[r2*5+c1]);
+    }
+
+    return 0;
+}
+
+Sample Input
+Plaintext: INSTRUMENTS
+Key: MONARCHY
+
+Sample Output
+Ciphertext: GATLMZCLRQXA
