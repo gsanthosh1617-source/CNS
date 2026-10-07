@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char p[100], key[100];
+    int i, k, n;
+
+    printf("Enter plaintext: ");
+    scanf("%s", p);
+
+    printf("Enter key: ");
+    scanf("%s", key);
+
+    n = strlen(key);
+
+    printf("Ciphertext: ");
+    for(i = 0, k = 0; p[i]; i++, k = (k + 1) % n)
+        printf("%c", (toupper(p[i]) - 'A' +
+               toupper(key[k]) - 'A') % 26 + 'A');
+
+    return 0;
+}
+
+Sample Input
+Plaintext: HELLO
+Key: KEY
+
+Sample Output
+Ciphertext: RIJVS
