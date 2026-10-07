@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int gcd(int a, int b) {
+    while (b) {
+        int t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+int main() {
+    char p[100];
+    int a, b, i;
+
+    printf("Enter plaintext: ");
+    scanf("%s", p);
+
+    printf("Enter a and b: ");
+    scanf("%d%d", &a, &b);
+
+    if (gcd(a, 26) != 1) {
+        printf("Invalid value of a!");
+        return 0;
+    }
+
+    printf("Ciphertext: ");
+    for (i = 0; p[i]; i++)
+        printf("%c", (a * (toupper(p[i]) - 'A') + b) % 26 + 'A');
+
+    return 0;
+}
+
+Sample Input
+Plaintext: HELLO
+a: 5
+b: 8
+
+Sample Output
+Ciphertext: RCLLA
