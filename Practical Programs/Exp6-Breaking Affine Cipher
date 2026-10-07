@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    char c[200];
+    int a = 15, b = 17, i, x;
+
+    printf("Enter ciphertext: ");
+    scanf("%s", c);
+
+    printf("Plaintext: ");
+    for (i = 0; c[i]; i++) {
+        x = c[i] - 'A';
+        x = (15 * (x - b + 26)) % 26;
+        printf("%c", x + 'A');
+    }
+
+    return 0;
+}
+
+Sample Input
+Ciphertext: BULL
+
+Sample Output
+Plaintext: EATT
