@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char p[]="meetmeattheusualplaceattenratherthaneightoclockx";
+    int k[2][2]={{9,4},{5,7}}, c[100], d[100];
+    int i,a,b;
+
+    printf("Ciphertext: ");
+    for(i=0;p[i];i+=2) {
+        a=p[i]-'a';
+        b=p[i+1]-'a';
+        c[i]=(9*a+4*b)%26;
+        c[i+1]=(5*a+7*b)%26;
+        printf("%c%c",c[i]+'a',c[i+1]+'a');
+    }
+
+    printf("\nPlaintext: ");
+    for(i=0;p[i];i+=2) {
+        a=c[i]; b=c[i+1];
+        d[i]=(5*a+12*b)%26;
+        d[i+1]=(15*a+25*b)%26;
+        printf("%c%c",d[i]+'a',d[i+1]+'a');
+    }
+
+    return 0;
+}
+
+Sample Output
+Ciphertext: UKIXUKYDROMEIWSZXWIOKUNUKHXHROAJROANQYEBTLKJEGAD
+
+Plaintext: MEETMEATTHEUSUALPLACEATTENRATHERTHANEIGHTOCLOCKX
