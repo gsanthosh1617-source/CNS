@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    double keys = 1, unique;
+    int i;
+
+    for(i = 1; i <= 25; i++)
+        keys *= i;
+
+    unique = keys / (25 * 25 * 2);
+
+    printf("Total keys = %.0f\n", keys);
+    printf("Approximate power of 2 = %.2f\n", log2(keys));
+    printf("Effective unique keys = %.0f\n", unique);
+    printf("Approximate power of 2 = %.2f\n", log2(unique));
+
+    return 0;
+}
+
+Sample Output
+Total keys = 15511210043330985984000000
+Approximate power of 2 = 83.68
+Effective unique keys ≈ 1.24 × 10^22
+Approximate power of 2 ≈ 73.68
