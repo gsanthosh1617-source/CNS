@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char c[500], p[500];
+    char eng[] = "ETAOINSHRDLCUMWFGYPBVKJXQZ";
+    int f[26] = {0}, map[26], i, j, k, n;
+
+    printf("Enter ciphertext: ");
+    fgets(c, sizeof(c), stdin);
+
+    printf("Enter number of results: ");
+    scanf("%d", &n);
+
+    for(i = 0; c[i]; i++)
+        if(isalpha(c[i]))
+            f[toupper(c[i])-'A']++;
+
+    for(i=0;i<26;i++) map[i]=-1;
+
+    for(i=0;i<26;i++) {
+        int max=0,pos=-1;
+        for(j=0;j<26;j++)
+            if(f[j]>max && map[j]==-1)
+                max=f[j],pos=j;
+
+        if(pos!=-1) {
+            map[pos]=eng[i]-'A';
+            f[pos]=-1;
+        }
+    }
+
+    printf("\nPossible plaintext:\n");
+
+    for(k=0;k<n;k++) {
+        for(i=0;c[i];i++) {
+            if(isalpha(c[i]))
+                p[i]='A'+map[toupper(c[i])-'A'];
+            else
+                p[i]=c[i];
+        }
+        p[i]='\0';
+
+        printf("%d. %s", k+1, p);
+    }
+
+    return 0;
+}
+
+Sample Input
+Ciphertext: ITSSG
+Number of results: 10
+
+Sample Output
+Possible plaintext:
+1. ESSHH
+2. ...
+3. ...
