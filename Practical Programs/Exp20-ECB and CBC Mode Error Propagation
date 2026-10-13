@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <openssl/des.h>
+
+int main()
+{
+    DES_cblock key = "12345678";
+    DES_cblock iv = "INITVECT";
+    DES_key_schedule ks;
+    unsigned char p[16] = "ABCDEFGH12345678";
+    unsigned char ecb[16], cbc[16];
+    unsigned char d1[16], d2[16];
+    int i;
+
+    DES_set_key_unchecked(&key, &ks);
+
+    DES_ecb_encrypt((DES_cblock *)p,
+                    (DES_cblock *)ecb, &ks, DES_ENCRYPT);
+    DES_ecb_encrypt((DES_cblock *)(p + 8),
+                    (DES_cblock *)(ecb + 8), &ks, DES_ENCRYPT);
+
+    DES_ncbc_encrypt(p, cbc, 16, &ks, &iv, DES_ENCRYPT);
+
+    ecb[0] ^= 1;
+    cbc[0] ^= 1;
+
+    DES_ecb_encrypt((DES_cblock *)ecb,
+                    (DES_cblock *)d1, &ks, DES_DECRYPT);
+    DES_ecb_encrypt((DES_cblock *)(ecb + 8),
+                    (DES_cblock *)(d1 + 8), &ks, DES_DECRYPT);
+
+    iv[0] = 'I'; iv[1] = 'N'; iv[2] = 'I'; iv[3] = 'T';
+    iv[4] = 'V'; iv[5] = 'E'; iv[6] = 'C'; iv[7] = 'T';
+
+    DES_ncbc_encrypt(cbc, d2, 16, &ks, &iv, DES_DECRYPT);
+
+    printf("ECB decrypted: ");
+    for(i = 0; i < 16; i++) printf("%c", d1[i]);
+
+    printf("\nCBC decrypted: ");
+    for(i = 0; i < 16; i++) printf("%c", d2[i]);
+
+    printf("\n");
+    return 0;
+}
+
+Sample Input
+Plaintext: ABCDEFGH12345678
+Key: 12345678
+IV: INITVECT
+Bit error: First ciphertext block
+
+Sample Output
+ECB decrypted: [First block corrupted]12345678
+CBC decrypted: [First two blocks affected]
