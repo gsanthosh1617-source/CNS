@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <string.h>
+#include <openssl/aes.h>
+
+int main()
+{
+    AES_KEY key;
+    unsigned char k[16] = "123456789012345";
+    unsigned char iv[16] = "abcdefghijklmnop";
+    unsigned char p[32] = "HELLO WORLD";
+    unsigned char ecb[32], cbc[32], cfb[32];
+    unsigned char iv1[16], iv2[16];
+    int len = strlen((char *)p), n, i;
+    unsigned char pad = 0x80;
+
+    n = ((len / 16) + 1) * 16;
+    p[len] = pad;
+    for(i = len + 1; i < n; i++) p[i] = 0;
+
+    AES_set_encrypt_key(k, 128, &key);
+
+    for(i = 0; i < n; i += 16)
+        AES_encrypt(p + i, ecb + i, &key);
+
+    memcpy(iv1, iv, 16);
+    AES_cbc_encrypt(p, cbc, n, &key, iv1, AES_ENCRYPT);
+
+    memcpy(iv2, iv, 16);
+    AES_cfb128_encrypt(p, cfb, n, &key, iv2, &i, AES_ENCRYPT);
+
+    printf("ECB: ");
+    for(i = 0; i < n; i++) printf("%02X ", ecb[i]);
+
+    printf("\nCBC: ");
+    for(i = 0; i < n; i++) printf("%02X ", cbc[i]);
+
+    printf("\nCFB: ");
+    for(i = 0; i < n; i++) printf("%02X ", cfb[i]);
+
+    printf("\n");
+    return 0;
+}
+
+Sample Input
+Plaintext: HELLO WORLD
+Key: 123456789012345
+IV: abcdefghijklmnop
+
+Sample Output
+ECB: [Encrypted hexadecimal ciphertext]
+CBC: [Encrypted hexadecimal ciphertext]
+CFB: [Encrypted hexadecimal ciphertext]
