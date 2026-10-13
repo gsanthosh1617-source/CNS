@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <openssl/des.h>
+
+int main()
+{
+    DES_cblock key = {'1','2','3','4','5','6','7','8'};
+    DES_key_schedule ks;
+    int i, j;
+
+    DES_set_key_unchecked(&key, &ks);
+
+    for(i = 0; i < 16; i++)
+    {
+        printf("K%d: ", i + 1);
+
+        for(j = 0; j < 6; j++)
+            printf("%02X ", ks.ks[i].ks[j]);
+
+        printf("\n");
+    }
+
+    return 0;
+}
+
+Sample Input
+Key: 12345678
+
+Sample Output
+K1: [48-bit subkey]
+K2: [48-bit subkey]
+K3: [48-bit subkey]
+...
+K16: [48-bit subkey]
