@@ -1,0 +1,27 @@
+#include <stdio.h>
+int main()
+{
+    int n, m, a, b, r;
+    printf("Enter n and plaintext block: ");
+    scanf("%d%d", &n, &m);
+    a = n;
+    b = m;
+    while(b != 0)
+    {
+        r = a % b;
+        a = b;
+        b = r;
+    }
+    if(a > 1)
+        printf("Common factor = %d\nRSA modulus can be factored.", a);
+    else
+        printf("No common factor found.");
+    return 0;
+}
+
+SAMPLE INPUT
+Enter n and plaintext block: 3599 59
+
+SAMPLE OUTPUT
+Common factor = 59
+RSA modulus can be factored.
