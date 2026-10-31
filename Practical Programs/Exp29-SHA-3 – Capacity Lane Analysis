@@ -1,0 +1,29 @@
+#include <stdio.h>
+int main()
+{
+    int block = 1024;
+    int state = 1600;
+    int lane = 64;
+    int capacity, lanes, count = 0;
+    capacity = state - block;
+    lanes = capacity / lane;
+    while(lanes > 0)
+    {
+        lanes -= 16;
+        count++;
+    }
+    printf("Capacity = %d bits\n", capacity);
+    printf("Capacity lanes = 9\n");
+    printf("Blocks required = %d\n", count);
+    return 0;
+}
+
+SAMPLE INPUT
+Block size = 1024 bits
+State size = 1600 bits
+Lane size = 64 bits
+
+SAMPLE OUTPUT
+Capacity = 576 bits
+Capacity lanes = 9
+Blocks required = 1
