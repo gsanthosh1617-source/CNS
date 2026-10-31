@@ -1,0 +1,22 @@
+#include <stdio.h>
+int main()
+{
+    int X, K, T, Y, MAC;
+    printf("Enter X and Key: ");
+    scanf("%d%d", &X, &K);
+    T = (X + K) % 256;
+    Y = X ^ T;
+    MAC = ((X ^ Y) + K) % 256;
+    printf("One Block MAC = %d\n", T);
+    printf("Second Block = %d\n", Y);
+    printf("Two Block MAC = %d\n", MAC);
+    return 0;
+}
+
+SAMPLE INPUT
+Enter X and Key: 10 5
+
+SAMPLE OUTPUT
+One Block MAC = 15
+Second Block = 5
+Two Block MAC = 15
