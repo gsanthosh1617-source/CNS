@@ -1,0 +1,27 @@
+#include <stdio.h>
+int main()
+{
+    int p=11, q=13, n, phi;
+    int e=7, d;
+    n = p*q;
+    phi = (p-1)*(q-1);
+    for(d=1; d<phi; d++)
+    {
+        if((e*d)%phi == 1)
+            break;
+    }
+    printf("Modulus n = %d\n", n);
+    printf("New Public Key = (%d,%d)\n", e,n);
+    printf("New Private Key = %d\n", d);
+    return 0;
+}
+
+SAMPLE INPUT
+p = 11
+q = 13
+e = 7
+
+SAMPLE OUTPUT
+Modulus n = 143
+New Public Key = (7,143)
+New Private Key = 103
