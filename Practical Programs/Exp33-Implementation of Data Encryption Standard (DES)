@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<openssl/des.h>
+int main()
+{
+DES_cblock key,plaintext,ciphertext,decrypted;
+DES_key_schedule schedule;
+int i;
+printf("Enter 8-character key: ");
+scanf("%8s",(char*)key);
+printf("Enter 8-character plaintext: ");
+scanf("%8s",(char*)plaintext);
+DES_set_key_unchecked(&key,&schedule);
+DES_ecb_encrypt(&plaintext,&ciphertext,&schedule,DES_ENCRYPT);
+printf("Encrypted Data: ");
+for(i=0;i<8;i++)
+printf("%02X",ciphertext[i]);
+DES_ecb_encrypt(&ciphertext,&decrypted,&schedule,DES_DECRYPT);
+printf("\nDecrypted Data: ");
+for(i=0;i<8;i++)
+printf("%c",decrypted[i]);
+return 0;
+}
+
+Sample Input
+Enter 8-character key: ABCDEFGH
+Enter 8-character plaintext: HELLO123
+
+Sample Output
+Encrypted Data:  [64-bit ciphertext in hexadecimal]
+Decrypted Data: HELLO123
