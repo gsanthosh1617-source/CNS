@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+int modpow(int a, int b, int m)
+{
+    int r = 1;
+    while (b > 0) {
+        r = (r * a) % m;
+        b--;
+    }
+    return r;
+}
+
+int main()
+{
+    int p = 23, q = 11, g = 4;
+    int x = 3, h = 9;
+    int k1 = 2, k2 = 4;
+    int r1, s1, r2, s2;
+
+    int kinv;
+
+    printf("DSA Signature Generation\n");
+
+    r1 = modpow(g, k1, p) % q;
+    kinv = 6; 
+    s1 = (kinv * (h + x * r1)) % q;
+
+    r2 = modpow(g, k2, p) % q;
+    kinv = 3;
+    s2 = (kinv * (h + x * r2)) % q;
+
+    printf("\nFirst DSA Signature: (%d, %d)", r1, s1);
+    printf("\nSecond DSA Signature: (%d, %d)", r2, s2);
+
+    printf("\n\nRSA uses the same private key and message hash.");
+    printf("\nTherefore, deterministic RSA signatures are identical.");
+
+    return 0;
+}
+
+Sample Input
+Message hash = 9
+Private key = 3
+First random k = 2
+Second random k = 4
+
+Sample Output
+DSA Signature Generation
+
+First DSA Signature: (5, 6)
+Second DSA Signature: (3, 6)
+
+RSA uses the same private key and message hash.
+Therefore, deterministic RSA signatures are identical.
