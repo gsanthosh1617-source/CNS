@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char text[1000];
+    int count[26] = {0};
+    int shift[26];
+    int i, j, temp, top;
+
+    printf("Enter ciphertext: ");
+    fgets(text, sizeof(text), stdin);
+
+    printf("Enter number of possible plaintexts: ");
+    scanf("%d", &top);
+
+    for(i = 0; text[i] != '\0'; i++)
+    {
+        if(text[i] >= 'A' && text[i] <= 'Z')
+            count[text[i] - 'A']++;
+        else if(text[i] >= 'a' && text[i] <= 'z')
+            count[text[i] - 'a']++;
+    }
+
+    for(i = 0; i < 26; i++)
+        shift[i] = i;
+
+    for(i = 0; i < 26; i++)
+    {
+        for(j = i + 1; j < 26; j++)
+        {
+            if(count[shift[j]] > count[shift[i]])
+            {
+                temp = shift[i];
+                shift[i] = shift[j];
+                shift[j] = temp;
+            }
+        }
+    }
+
+    if(top > 26)
+        top = 26;
+
+    printf("\nPossible Plaintexts:\n");
+
+    for(i = 0; i < top; i++)
+    {
+        int key = (shift[i] - 4 + 26) % 26;
+
+        printf("\nCandidate %d: ", i + 1);
+
+        for(j = 0; text[j] != '\0'; j++)
+        {
+            if(text[j] >= 'A' && text[j] <= 'Z')
+                printf("%c", (text[j] - 'A' - key + 26) % 26 + 'A');
+            else if(text[j] >= 'a' && text[j] <= 'z')
+                printf("%c", (text[j] - 'a' - key + 26) % 26 + 'a');
+            else
+                printf("%c", text[j]);
+        }
+    }
+
+    return 0;
+}
+
+Sample Input
+Enter ciphertext: KHOOR ZRUOG
+Enter number of possible plaintexts: 10
+
+Sample Output
+Possible Plaintexts:
+
+Candidate 1: HELLO WORLD
+Candidate 2: ...
+Candidate 3: ...
+Candidate 4: ...
+Candidate 5: ...
+Candidate 6: ...
+Candidate 7: ...
+Candidate 8: ...
+Candidate 9: ...
+Candidate 10: ...
