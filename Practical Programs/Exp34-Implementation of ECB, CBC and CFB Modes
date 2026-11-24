@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include<string.h>
+#include<openssl/evp.h>
+
+void encrypt(unsigned char *in,int len,unsigned char *out,int mode)
+{
+unsigned char key[16]="0123456789ABCDEF";
+unsigned char iv[16]="1234567890ABCDEF";
+EVP_CIPHER_CTX *ctx=EVP_CIPHER_CTX_new();
+const EVP_CIPHER *cipher;
+int n,total;
+if(mode==1)cipher=EVP_aes_128_ecb();
+else if(mode==2)cipher=EVP_aes_128_cbc();
+else cipher=EVP_aes_128_cfb128();
+EVP_EncryptInit_ex(ctx,cipher,NULL,key,mode==1?NULL:iv);
+EVP_CIPHER_CTX_set_padding(ctx,0);
+EVP_EncryptUpdate(ctx,out,&n,in,len);
+total=n;
+EVP_EncryptFinal_ex(ctx,out+total,&n);
+EVP_CIPHER_CTX_free(ctx);
+}
+
+void decrypt(unsigned char *in,int len,unsigned char *out,int mode)
+{
+unsigned char key[16]="0123456789ABCDEF";
+unsigned char iv[16]="1234567890ABCDEF";
+EVP_CIPHER_CTX *ctx=EVP_CIPHER_CTX_new();
+const EVP_CIPHER *cipher;
+int n,total;
+if(mode==1)cipher=EVP_aes_128_ecb();
+else if(mode==2)cipher=EVP_aes_128_cbc();
+else cipher=EVP_aes_128_cfb128();
+EVP_DecryptInit_ex(ctx,cipher,NULL,key,mode==1?NULL:iv);
+EVP_CIPHER_CTX_set_padding(ctx,0);
+EVP_DecryptUpdate(ctx,out,&n,in,len);
+total=n;
+EVP_DecryptFinal_ex(ctx,out+total,&n);
+EVP_CIPHER_CTX_free(ctx);
+}
+
+int main()
+{
+unsigned char text[128],padded[144],enc[144],dec[144];
+int i,len,n;
+printf("Enter plaintext: ");
+scanf("%127s",text);
+len=strlen((char*)text);
+n=((len/16)+1)*16;
+memcpy(padded,text,len);
+padded[len]=0x80;
+for(i=len+1;i<n;i++)padded[i]=0;
+printf("\nECB Mode:\n");
+encrypt(padded,n,enc,1);
+for(i=0;i<n;i++)printf("%02X",enc[i]);
+decrypt(enc,n,dec,1);
+printf("\nDecrypted: %s\n",dec);
+printf("\nCBC Mode:\n");
+encrypt(padded,n,enc,2);
+for(i=0;i<n;i++)printf("%02X",enc[i]);
+decrypt(enc,n,dec,2);
+printf("\nDecrypted: %s\n",dec);
+printf("\nCFB Mode:\n");
+encrypt(padded,n,enc,3);
+for(i=0;i<n;i++)printf("%02X",enc[i]);
+decrypt(enc,n,dec,3);
+printf("\nDecrypted: %s\n",dec);
+return 0;
+}
+
+Sample Input
+Enter plaintext: HELLO
+
+Sample Output
+ECB Mode:
+25013262B822FDB8CBE93951D2313606
+Decrypted: HELLO
+
+CBC Mode:
+D2C2CD184CCE3DA5D17AA1295A1CAA7E
+Decrypted: HELLO
+
+CFB Mode:
+DEF7DAA0C4C1E3D5A850DF7441ED2C3C
+Decrypted: HELLO
