@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char text[1000];
+    char freq[] = "ETAOINSHRDLCUMWFGYPBVKJXQZ";
+    int count[26] = {0};
+    int map[26];
+    int i, j, top;
+
+    printf("Enter ciphertext: ");
+    fgets(text, sizeof(text), stdin);
+
+    printf("Enter number of possible plaintexts: ");
+    scanf("%d", &top);
+
+    for(i = 0; text[i] != '\0'; i++)
+    {
+        if(text[i] >= 'A' && text[i] <= 'Z')
+            count[text[i] - 'A']++;
+        else if(text[i] >= 'a' && text[i] <= 'z')
+            count[text[i] - 'a']++;
+    }
+
+    for(i = 0; i < 26; i++)
+        map[i] = i;
+
+    for(i = 0; i < 26; i++)
+    {
+        for(j = i + 1; j < 26; j++)
+        {
+            if(count[map[j]] > count[map[i]])
+            {
+                int temp = map[i];
+                map[i] = map[j];
+                map[j] = temp;
+            }
+        }
+    }
+
+    printf("\nPossible plaintext:\n");
+
+    for(i = 0; i < top; i++)
+    {
+        printf("\nCandidate %d: ", i + 1);
+
+        for(j = 0; j < 26; j++)
+            map[j] = j;
+
+        for(j = 0; j < 26; j++)
+            map[map[i]] = map[i];
+
+        for(j = 0; text[j] != '\0'; j++)
+        {
+            if(text[j] >= 'A' && text[j] <= 'Z')
+                printf("%c", freq[map[text[j] - 'A'] % 26]);
+            else if(text[j] >= 'a' && text[j] <= 'z')
+                printf("%c", freq[map[text[j] - 'a'] % 26] + 32);
+            else
+                printf("%c", text[j]);
+        }
+    }
+
+    return 0;
+}
+
+Sample Input
+Enter ciphertext: WKH TXLFN EURZQ IRA
+Enter number of possible plaintexts: 10
+
+Sample Output
+Possible plaintext:
+
+Candidate 1: ...
+Candidate 2: ...
+Candidate 3: ...
+Candidate 4: ...
+Candidate 5: ...
+Candidate 6: ...
+Candidate 7: ...
+Candidate 8: ...
+Candidate 9: ...
+Candidate 10: ...
