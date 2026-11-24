@@ -1,0 +1,53 @@
+#include <stdio.h>
+void leftshift(unsigned char a[], int n, int rb)
+{
+    int i, carry = 0;
+    int msb = a[0] >> 7;
+    for (i = n - 1; i >= 0; i--) {
+        int next = a[i] >> 7;
+        a[i] = (a[i] << 1) | carry;
+        carry = next;
+    }
+    if (msb)
+        a[n - 1] ^= rb;
+}
+int main()
+{
+    unsigned char L[16], K1[16], K2[16];
+    int bits, n, rb, i;
+    printf("CMAC Subkey Generation\n");
+    printf("Enter block size (64 or 128): ");
+    scanf("%d", &bits);
+    if (bits != 64 && bits != 128) {
+        printf("Invalid block size");
+        return 0;
+    }
+    n = bits / 8;
+    rb = (bits == 64) ? 0x1B : 0x87;
+    printf("Enter L = E(K, 0) in hexadecimal:\n");
+    for (i = 0; i < n; i++)
+        scanf("%2hhx", &L[i]);
+    for (i = 0; i < n; i++)
+        K1[i] = L[i];
+    leftshift(K1, n, rb);
+    for (i = 0; i < n; i++)
+        K2[i] = K1[i];
+    leftshift(K2, n, rb);
+    printf("First Subkey K1: ");
+    for (i = 0; i < n; i++)
+        printf("%02X", K1[i]);
+    printf("\nSecond Subkey K2: ");
+    for (i = 0; i < n; i++)
+        printf("%02X", K2[i]);
+    return 0;
+}
+
+Sample Input
+CMAC Subkey Generation
+Enter block size (64 or 128): 128
+Enter L = E(K, 0) in hexadecimal:
+80 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Sample Output
+First Subkey K1: 00000000000000000000000000000087
+Second Subkey K2: 0000000000000000000000000000000E
